@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="TechTestEdCurtin.Views.TabControlView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:local="clr-namespace:TechTestEdCurtin.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <TabControl>
+            <TabItem x:Name="BooksTabItem" IsSelected="True" Header="BOOKS">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Loaded">
+                        <i:InvokeCommandAction Command="{Binding Path=TabItemLoaded}" CommandParameter="{Binding ElementName=BooksTabItem}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <StackPanel>
+                    <Button Width="100" HorizontalAlignment="Left" Command="{Binding Path=AddBookCommand}">Add New Book</Button>
+                    <DataGrid 
+                        IsReadOnly="True"
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="false"
+                        ItemsSource="{Binding Path=BookTabItemViewModel.BookList}"
+                        >
+                        <DataGrid.Columns>
+
+                            <DataGridTemplateColumn Width="*" Header="Author Full Name">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock x:Name="txtBlock"  Tag="{Binding Path=AuthorId, NotifyOnSourceUpdated=True}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Loaded">
+                                                    <i:InvokeCommandAction Command="{Binding Path=DataContext.GetAuthorFullName, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}}}" CommandParameter="{Binding ElementName=txtBlock}" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!--<DataGridTextColumn Width="*" Header="Author Name" Binding="{Binding AuthorName}">
+
+                            </DataGridTextColumn>-->
+                            <DataGridTextColumn Width="*" Header="Title" Binding="{Binding Path=Title}"/>
+                            <DataGridTextColumn Width="*" Header="Release Date" Binding="{Binding Path=ReleaseDate, StringFormat=\{0:dd.MM.yy\}}"></DataGridTextColumn>
+                            <DataGridTextColumn Width="*" Header="Category" Binding="{Binding Path=Category}"/>
+
+
+                            <DataGridTemplateColumn Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button  Command="{Binding Path=DataContext.EditBookCommand, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" CommandParameter="{Binding}">Edit</Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding Path=DataContext.DeleteBookCommand, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" CommandParameter="{Binding}">Delete</Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+
+
+            </TabItem>
+            <TabItem x:Name="AuthorsTabItem" IsSelected="True" Header="Authors">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Loaded">
+                        <i:InvokeCommandAction Command="{Binding Path=TabItemLoaded}" CommandParameter="{Binding ElementName=AuthorsTabItem}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <!--<DataGrid ItemsSource="{Binding Path=AuthorTabItemViewModel.AuthorList}"></DataGrid>-->
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</UserControl>
